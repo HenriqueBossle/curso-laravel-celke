@@ -1,0 +1,123 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+@layer componentes {
+    .main-container {
+        @apply flex flex-col h-screen bg-gray-100;
+    }
+    .header {
+        @apply bg-blue-700 text-white p-4 w-full;
+    }
+    .content-header {
+        @apply max-w-6xl mx-auto flex items-center;
+    }
+    .title-logo {
+        @apply text-xl font-bold;
+    }
+    .list-nav-link {
+        @apply flex space-x-6 ml-6;
+    }
+    .nav-link {
+        @apply hover:text-gray-300 transition-colors;
+    }
+    .content {
+        @apply flex-1 px-2 py-6 max-w-6xl mx-auto w-full;
+    }
+
+    .content-title {
+        @apply flex justify-between items-center mb-6;
+    }
+
+    .page-title {
+        @apply text-2xl;
+    }
+
+    .btn-primary {
+        @apply bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors;
+    }
+
+    .form-container {
+        @apply mt-6 bg-white shadow-md rounded-lg p-6;
+    }
+
+    .form-label {
+        @apply block text-sm font-semibold
+    }
+
+    .form-input {
+        @apply border w-full p-2 mt-1 rounded-md border-blue-100 shadow-sm focus:border-blue-300 focus:ring-blue-200 focus:outline-none;
+    }
+
+    .btn-success {
+        @apply p-2 bg-green-500 text-white rounded-md hover:bg-green-600 cursor-pointer transition-colors;
+    }
+
+    .btn-warning {
+        @apply p-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 cursor-pointer transition-colors;
+    }
+
+    .btn-danger {
+        @apply p-2 bg-red-500 text-white rounded-md hover:bg-red-600 cursor-pointer transition-colors;
+    }
+
+    .alert-success {
+        @apply p-4 mb-4 text-green-800 rounded-lg bg-green-100 dark:bg-gray-800 dark:text-green-800
+    }
+
+    .alert-error {
+        @apply p-4 mb-4 text-red-800 rounded-lg bg-red-100 dark:bg-gray-800 dark:text-red-800
+    }
+
+    /*Inicio da tabela de listar*/
+
+    .table-container {
+        @apply overflow-x-auto bg-white shadow-md rounded-lg;
+    }
+
+    .table {
+        @apply min-w-full border-collapse w-full
+    }
+
+    .table-header {
+        @apply bg-blue-400 text-white uppercase text-sm leading-normal;
+    }
+
+    .table-header th {
+        @apply py-3 px-6 text-left;
+    }
+
+    .table-header .center {
+        @apply text-center;
+    }
+
+    .table-body {
+        @apply text-gray-700 text-sm font-light;
+    }
+
+    .table-row {
+        @apply border-b border-gray-200 hover:bg-blue-50 transition;
+    }
+
+    .table-cell {
+        @apply py-3 px-6
+    }
+
+    .table-actions {
+        @apply py-3 px-6 text-center flex space-x-1;
+    }
+
+    /* inicio da paginação */
+
+    .pagination {
+        @apply mt-2 p-3
+    }
+}
