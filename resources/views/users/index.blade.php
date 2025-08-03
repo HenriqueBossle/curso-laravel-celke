@@ -11,8 +11,11 @@
 
             <form class="pb-3 grid xl:grid-col-5 md:grid-cols-2 gap-2 itens-end">
                 <input type="text" name="name" class="form-input" placeholder="Digite o nome" value="{{ $name }}">
-
                 <input type="text" name="email" class="form-input" placeholder="Digite o e-mail" value="{{ $email }}">
+
+                <input type="datetime-local" name="start_date_registration" class="form-input" value="{{ $start_date_registration }}">
+                <input type="datetime-local" name="end_date_registration" class="form-input" value="{{ $end_date_registration }}">
+
 
                 <div class="flex gap-1">
                     <button type="submit" class="btn-primary">
