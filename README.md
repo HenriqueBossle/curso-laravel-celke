@@ -1,4 +1,4 @@
-Projeto feito no curso gratuito de Laravel 12 da Celke Cursos
+Projeto feito no curso gratuito de Laravel 12 da Celke Cursos <br />
 Playlist do curso: https://www.youtube.com/watch?v=ButD2QVZprE&list=PLmY5AEiqDWwB29FbhTfTh86Zr0yjeFBwO
 
 
