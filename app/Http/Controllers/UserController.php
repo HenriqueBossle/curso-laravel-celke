@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -166,6 +167,116 @@ class UserController extends Controller
         }catch (Exception $e){
             return redirect()->route('user.show', ['user' => $user])->with('error', 'E-mail não enviado!');
         }
+    }
+
+    public function generatePdfUsers(Request $request)
+    {
+        try{
+        $users = User::when(
+            $request->filled('name'),
+            fn($query) => 
+            $query->whereLike('name', '%' .$request->name . '%')
+        )
+            ->when(
+                $request->filled('email'),
+                fn($query) =>
+                $query->whereLike('email', '%' . $request->email . '%')
+            )
+            ->when(
+                $request->filled('start_date_registration'),
+                fn($query) => 
+                    $query->where('created_at', '>=', Carbon::parse($request->start_date_registration))
+            )
+            ->when(
+                $request->filled('end_date_registration'),
+                fn($query) => 
+                    $query->where('created_at', '<=', Carbon::parse($request->end_date_registration))
+            )
+            ->orderByDesc('name')
+            ->get();
+
+            $totalRecords = $users->count('id');
+
+            $numberRecordsAllowed = 10;
+            if($totalRecords > $numberRecordsAllowed){
+                return redirect()->route('user.index', [     
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'start_date_registration' => $request->start_date_registration,
+                    'end_date_registration' => $request->end_date_registration,
+                ])->with('error', 'Número máximo de registros excedido! Máximo permitido: ' . $numberRecordsAllowed);
+            }
+
+            $pdf = Pdf::loadView('users.generate-pdf-users', ['users' => $users])->setPaper('a4', 'portrait');
+
+            return $pdf->download('listar_usuarios.pdf');
+        } catch (Exception $e) {
+            return redirect()->route('user.index')->with('error', 'Erro ao gerar PDF dos usuários!');
+        }
+
+    }
+
+    public function generateCsvUsers(Request $request){
+        //$users = User::orderByDesc('id')->get();
+
+        $users = User::when(
+            $request->filled('name'),
+            fn($query) => 
+            $query->whereLike('name', '%' .$request->name . '%')
+        )
+            ->when(
+                $request->filled('email'),
+                fn($query) =>
+                $query->whereLike('email', '%' . $request->email . '%')
+            )
+            ->when(
+                $request->filled('start_date_registration'),
+                fn($query) => 
+                    $query->where('created_at', '>=', Carbon::parse($request->start_date_registration))
+            )
+            ->when(
+                $request->filled('end_date_registration'),
+                fn($query) => 
+                    $query->where('created_at', '<=', Carbon::parse($request->end_date_registration))
+            )
+            ->orderByDesc('name')
+            ->get();
+
+        $totalRecords = $users->count('id');
+
+        $numberRecordsAllowed = 10;
+
+        if($totalRecords > $numberRecordsAllowed){
+            return redirect()->route('user.index', [     
+                'name' => $request->name,
+                'email' => $request->email,
+                'start_date_registration' => $request->start_date_registration,
+                'end_date_registration' => $request->end_date_registration,
+            ])->with('error', 'Número máximo de registros excedido! Máximo permitido: ' . $numberRecordsAllowed);
+        }
+
+        $csvFileName = tempnam(sys_get_temp_dir(), 'csv_' . Str::ulid());
+
+        $openFile = fopen($csvFileName, 'w');
+
+        $header = ['id', 'Nome', 'E-mail', 'Data de cadastro'];
+
+        fputcsv($openFile, $header, ';');
+
+        foreach ($users as $user){
+            $userArray = [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'created_at' => \Carbon\Carbon::parse($user->created_at)->format('d/m/Y H:i:s'),
+            ];
+
+            fputcsv($openFile, $userArray, ';');
+        }
+
+        fclose($openFile);
+
+        return response()->download($csvFileName, 'Listar_users_' . Str::ulid() . '.csv');
     }
 
 
